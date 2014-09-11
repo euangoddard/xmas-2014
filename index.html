@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xmas 2014 card</title>
+    <link rel="stylesheet" href="css/ionic.css" />
+  </head>
+  <body ng-app="xmas">
+    <section class="ionic-body" ng-controller="GameCtrl as game_ctrl">
+      <div class="bar bar-header bar-assertive">
+        <h1 class="title">bar-assertive</h1>
+      </div>
+      <div class="content has-header padding">
+        {{ date | amDateFormat:'dddd, MMMM Do YYYY, ha' }}
+        
+        <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
+        <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
+      </div>
+    </section>
+    
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/moment.min.js"></script>
+    <script src="js/lib/angular-moment.min.js"></script>
+
+    <script src="js/ticker.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
