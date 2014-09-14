@@ -1,0 +1,18 @@
+// Using media queries with like this:
+// @include media-query($palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
+@mixin media-width-query($device-width) {
+    @media screen and (max-width: $device-width) {
+        @content;
+    }
+}
+
+@mixin media-orientation-query($orientation) {
+    @media screen and (orientation: $orientation) {
+        @content;
+    }
+}

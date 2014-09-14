@@ -4,20 +4,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Xmas 2014 card</title>
-    <link rel="stylesheet" href="css/ionic.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>
-  <body ng-app="xmas">
-    <section class="ionic-body" ng-controller="GameCtrl as game_ctrl">
-      <div class="bar bar-header bar-assertive">
-        <h1 class="title">bar-assertive</h1>
-      </div>
-      <div class="content has-header padding">
-        {{ date | amDateFormat:'dddd, MMMM Do YYYY, ha' }}
-        
-        <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
-        <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
-      </div>
-    </section>
+  <body>
+    <div class="row" ng-app="xmas">
+      <section class="column" ng-controller="GameCtrl as game_ctrl">
+        <div>
+          {{ date | amDateFormat:'dddd, MMMM Do YYYY, ha' }}
+          
+          <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
+          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
+        </div>
+      </section>
+      <section class="column">
+        <p>There's something else in this section. This should have the padding on the left</p>
+      </section>
+
+    </div>
     
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/moment.min.js"></script>

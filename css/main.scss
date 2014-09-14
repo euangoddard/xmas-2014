@@ -1,0 +1,45 @@
+---
+---
+@charset "utf-8";
+
+
+@import "_normalize";
+@import "_utils";
+
+
+$row-width: 1200px;
+$gutter-width: 1em;
+
+.row {
+    width: $row-width;
+    margin: 0 auto;
+    padding: 0 $gutter-width;
+    overflow: hidden;
+}
+@include media-width-query($row-width) {
+    .row {
+        width: 100%;
+    }
+}
+
+.column {
+    width: 100%;
+    background: blue;
+}
+
+
+@include media-orientation-query(landscape) {
+    .column {
+        width: 50%;
+        float: left;
+
+        &:nth-child(odd) {
+            padding-right: $gutter-width;
+        }
+        &:nth-child(even) {
+            padding-left: $gutter-width;
+        }
+    }
+
+
+}
