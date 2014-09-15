@@ -6,18 +6,41 @@
     <title>Xmas 2014 card</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
-  <body>
-    <div class="row" ng-app="xmas">
-      <section class="column" ng-controller="GameCtrl as game_ctrl">
+  <body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
+    <header>
+        <time>{{ date | amDateFormat:'Do MMMM YYYY, ha' }}</time>
+        <span class="presents" ng-bind="presents | number"></span>
+
+    </header>
+    <div class="row">
+      <section class="column">
         <div>
-          {{ date | amDateFormat:'dddd, MMMM Do YYYY, ha' }}
           
           <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
           <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
+          <button type="button" ng-click="game_ctrl.make_present()" class="btn-round btn-present">
+          </button>
         </div>
       </section>
       <section class="column">
-        <p>There's something else in this section. This should have the padding on the left</p>
+        <div ng-repeat="item in items">
+          <h3>{{ item.label }}</h3>
+          <button
+            type="button"
+            class="btn-round btn-{{ item.id }}"
+            ng-disabled="presents < item.cost"
+            ng-click="game_ctrl.buy_item(item)"
+          ></button>
+          <dl>
+            <dt>Cost</dt>
+            <dd>{{ item.cost | number }}</dd>
+            <dt>Quantity</dt>
+            <dd>{{ item.quantity | number }}</dd>
+            <dt>Benefit</dt>
+            <dd>{{ item.effect }}</dd>
+          </dl>
+        </div>
+        
       </section>
 
     </div>

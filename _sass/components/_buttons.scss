@@ -1,0 +1,44 @@
+@import "_colours";
+@import "_utils";
+
+.btn-round {
+    background-color: $colour-red;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    display: block;
+    border-radius: 50%;
+    border: none;
+    width: 5em;
+    height: 5em;
+    
+    &:hover {
+        background-color: $colour-red-light;
+    }
+
+    &:focus {
+        outline: none;
+    }
+    
+    &:disabled {
+        background-color: desaturate($colour-red, 100%);
+
+        &:hover {
+            background-color: desaturate($colour-red-light, 100%);
+        }
+    }
+}
+
+.btn-present {
+    background-image: image-url("present-tight.svg");
+    width: 10em;
+    height: 10em;
+    @include background-size(80%);
+}
+
+$button-types: elf reindeer santa sleigh;
+@each $button-type in $button-types {
+    .btn-#{$button-type} {
+        background-image: image-url("#{$button-type}.svg");
+        @include background-size(70%);
+    }
+}
