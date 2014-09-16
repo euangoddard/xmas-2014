@@ -42,7 +42,7 @@
 
         Ticker.tick(function () {
             if ($scope.is_running) {
-                $scope.date = moment($scope.date).add(1, 'hours');
+                $scope.date = moment($scope.date).add(12, 'hours');
 
                 var presents_to_increment = 0;
                 angular.forEach($scope.items, function (item) {
