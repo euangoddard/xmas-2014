@@ -8,30 +8,25 @@
   </head>
   <body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
     <header>
-        <time>{{ date | amDateFormat:'Do MMMM YYYY, ha' }}</time>
+        <time>{{ date | amDateFormat:'Do MMMM YYYY a' }}</time>
         <span class="presents" ng-bind="presents | number"></span>
-
     </header>
     <div class="row">
       <section class="column">
+        <h2>Presents</h2>
+        <h4>Target: 1.87 billion</h4>
+        <h4>Current: {{ presents | number }}</h4>
         <div>
-          
-          <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
-          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
           <button type="button" ng-click="game_ctrl.make_present()" class="btn-round btn-present">
           </button>
+          <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
+          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
         </div>
       </section>
       <section class="column">
-        <div ng-repeat="item in items">
+        <div ng-repeat="item in items" class="item">
           <h3>{{ item.label }}</h3>
-          <button
-            type="button"
-            class="btn-round btn-{{ item.id }}"
-            ng-disabled="presents < item.cost"
-            ng-click="game_ctrl.buy_item(item)"
-          ></button>
-          <dl>
+          <dl class="item-data">
             <dt>Cost</dt>
             <dd>{{ item.cost | number }}</dd>
             <dt>Quantity</dt>
@@ -39,6 +34,12 @@
             <dt>Benefit</dt>
             <dd>{{ item.effect }}</dd>
           </dl>
+          <button
+            type="button"
+            class="btn-round btn-{{ item.id }}"
+            ng-disabled="presents < item.cost"
+            ng-click="game_ctrl.buy_item(item)"
+          ></button>
         </div>
         
       </section>
@@ -50,6 +51,7 @@
     <script src="js/lib/angular-moment.min.js"></script>
 
     <script src="js/ticker.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

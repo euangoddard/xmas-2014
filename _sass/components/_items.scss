@@ -1,0 +1,26 @@
+@import "_colours";
+
+.item {
+    border-bottom: 1px dotted $colour-red;
+    padding-bottom: 0.75em;
+    overflow: hidden;
+}
+
+.item-data {
+    float: right;
+    font-size: 0.8em;
+
+    * {
+        display: inline;
+        margin: 0;
+    }
+    *:nth-child(even) {
+        margin-right: 1em;
+    }
+    *:nth-child(odd) {
+        font-weight: 800;
+        &::after {
+            content: ':';
+        }
+    }
+}
