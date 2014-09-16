@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    var xmas = angular.module('xmas', ['angularMoment', 'ticker']);
+    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'storage']);
 
 
     xmas.controller('GameCtrl', function ($scope, Ticker) {
