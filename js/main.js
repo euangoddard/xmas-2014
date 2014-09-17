@@ -3,6 +3,11 @@
 
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'storage']);
 
+    var SANTAS_MOODS = [
+        {label: 'Picky (fewest children get presents)', factor: 0.5},
+        {label: 'Meh!', factor: 0.6},
+        {label: 'Easy-going (most children get presents)', factor: 0.7},
+    ];
 
     xmas.controller('GameCtrl', function ($scope, Ticker) {
         $scope.ticks = [];
@@ -10,8 +15,6 @@
         $scope.date = new Date(2013, 11, 26);
         $scope.presents = 0;
         
-        var no_tick_benefit = function () {return 0;};
-        var no_click_benefit = function () {return 1;};
         $scope.items = [
             {
                 id: 'elf',
@@ -21,8 +24,7 @@
                 quantity: 0,
                 tick_benefit: function () {
                     return this.quantity * 10;
-                },
-                click_benefit: no_click_benefit
+                }
             },
             {
                 id: 'santa',
@@ -30,7 +32,6 @@
                 label: 'Santa upgrade',
                 effect: 'Increase Santa\'s efficiency 2%',
                 quantity: 0,
-                tick_benefit: no_tick_benefit,
                 click_benefit: function () {
                     return Math.pow(1.02, this.quantity);
                 }
@@ -41,17 +42,21 @@
                 label: 'Reindeer',
                 effect: 'Pull a sleigh containing 10,000 presents',
                 quantity: 0,
-                tick_benefit: no_tick_benefit,
-                click_benefit: no_click_benefit
+                unit_power: 10000,
+                get_total_power: function () {
+                    return this.unit_power * this.quantity;
+                }
             },
             {
                 id: 'sleigh',
                 base_cost: 10000,
                 label: 'Sleigh upgrade',
-                effect: 'Store 100,000 presents for deliver per upgrade',
+                effect: 'Store 100,000 presents for delivery',
                 quantity: 0,
-                tick_benefit: no_tick_benefit,
-                click_benefit: no_click_benefit
+                unit_capacity: 100000,
+                get_total_capacity: function () {
+                    return this.quantity * this.unit_capacity;
+                }
             }
         ];
 
@@ -61,7 +66,9 @@
 
                 var presents_to_increment = 0;
                 angular.forEach($scope.items, function (item) {
-                    presents_to_increment += item.tick_benefit();
+                    if (angular.isFunction(item.tick_benefit)) {
+                        presents_to_increment += item.tick_benefit();
+                    }
                 });
                 $scope.presents += parseInt(presents_to_increment, 10);
             }
@@ -78,25 +85,38 @@
         this.make_presents = function () {
             var presents_to_increment = 1;
             angular.forEach($scope.items, function (item) {
-                presents_to_increment *= item.click_benefit();
+                if (angular.isFunction(item.click_benefit)) {
+                    presents_to_increment *= item.click_benefit();
+                }
             });
             $scope.presents += parseInt(presents_to_increment, 10);
         };
 
         this.buy_item = function (item) {
-            if (get_item_cost(item) <= $scope.presents) {
-                $scope.presents -= item.cost;
+            var item_cost = get_item_cost(item);
+            if (item_cost <= $scope.presents) {
+                $scope.presents -= item_cost;
                 item.quantity += 1;
             }
         };
 
-        
+        $scope.sleigh = {capacity: 0, power: 0};
+        $scope.$watch('items', function (items) {
+            var items_by_id = _.indexBy(items, 'id');
+            $scope.sleigh.capacity = items_by_id.sleigh.get_total_capacity();
+            $scope.sleigh.power = items_by_id.reindeer.get_total_power();
+        }, true);
     });
 
     var get_item_cost = function (item) {
         var item_cost = item.base_cost * Math.pow(1.15, item.quantity);
         return parseInt(item_cost, 10);
     };
+
+    xmas.controller('SetupCtrl', function ($scope) {
+        $scope.santas_moods = SANTAS_MOODS;
+        $scope.santas_mood = SANTAS_MOODS[0];
+    });
 
     xmas.filter('cost', function () {
         return get_item_cost;

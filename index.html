@@ -11,19 +11,76 @@
         <time>{{ date | amDateFormat:'Do MMMM YYYY a' }}</time>
         <span class="presents" ng-bind="presents | number"></span>
     </header>
-    <div class="row">
-      <section class="column">
-        <h2>Presents</h2>
-        <h4>Target: 1.87 billion</h4>
-        <h4>Current: {{ presents | number }}</h4>
-        <div>
-          <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present">
+
+    <div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
+        <section class="column">
+          <h1>Merry Christmas and a Happy 2015!</h1>
+          <h2>The story so far...</h2>
+          <p>
+            After a hectic Christmas 2013, Father Christmas has returned to the North Pole feeling sapped of energy, only to find all his elves has walked out. Worse still when he wakes up on Boxing Day, the reindeer have run off and someone has stolen his sleigh.
+          </p>
+          <h2>The objectives</h2>
+          <ol>
+            <li>
+              Help Father Christmas make enough presents for all the <em>nice</em> children. He can use the presents to hire elves to help him make more presents.
+            </li>
+            <li>
+              Buy a new sleigh and upgrade it to ensure that it can carry all the presents.
+            </li>
+            <li>
+              Buy reindeer to pull the sleigh &mdash; ensure that you have enough reindeer to pull the sleigh when it's laden with presents.
+            </li>
+          </ol>
+        </section>
+        <section class="column">
+          <h2>Ready?</h2>
+          <label for="santas-mood">
+            How picky do you want Father Christmas to be?
+          </label>
+          <select
+            id="santas-mood"
+            ng-model="santas_mood"
+            ng-options="mood as mood.label for mood in santas_moods"
+          ></select>
+          <button
+            ng-click="game_ctrl.start()"
+            type="button"
+            class="btn-round btn-start"
+          >
+            Start
           </button>
-          <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
-          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
+        </section>
+    </div>
+
+    <div class="row" ng-if="is_running">
+      <section class="column">
+        <h2>Status</h2>
+
+        <h3>Presents</h3>
+        <div class="item">
+          <dl class="item-data">
+            <dt>Target</dt>
+            <dd>1.87 billion</dd>
+            <dt>Current</dt>
+            <dd>{{ presents | number }}</dd>
+          </dl>
+          <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
         </div>
+        
+        <h3>Sleigh capabilities</h3>
+        <div class="item">
+          <dl class="item-data">
+            <dt>Sleigh capacity</dt>
+            <dd>{{ sleigh.capacity | number }} presents</dd>
+            <dt>Reindeer pulling power</dt>
+            <dd>{{ sleigh.power | number }}</dd>
+          </dl>
+        </div>
+
+          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
       </section>
       <section class="column">
+        <h2>Upgrades</h2>
         <div ng-repeat="item in items" class="item">
           <h3>{{ item.label }}</h3>
           <dl class="item-data">
@@ -41,14 +98,13 @@
             ng-click="game_ctrl.buy_item(item)"
           ></button>
         </div>
-        
       </section>
-
     </div>
     
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/moment.min.js"></script>
     <script src="js/lib/angular-moment.min.js"></script>
+    <script src="js/lib/lodash.min.js"></script>
 
     <script src="js/ticker.js"></script>
     <script src="js/storage.js"></script>
