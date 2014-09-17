@@ -4,7 +4,10 @@
 
 
 $row-width: 1200px;
-$gutter-width: 1em;
+
+$gutter-width-small: 0.5rem;
+$gutter-width: $gutter-width-small * 2;
+$gutter-width-large: $gutter-width * 2;
 
 .row {
     width: $row-width;
@@ -22,19 +25,28 @@ $gutter-width: 1em;
     width: 100%;
 }
 
+body {
+    padding-top: $gutter-width-large + $gutter-width;
+}
+
+$header-font-size-factor: 0.9;
 header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
     overflow: hidden;
-    font-size: 0.9em;
+    font-size: $gutter-width * $header-font-size-factor;
     font-weight: 800;
     background-color: $colour-red;
     color: $colour-white;
-    padding: 0.5em 1em;
-    margin-bottom: 0.5em;
-    line-height: 2 * 1 / 0.9;
+    padding: $gutter-width-small $gutter-width;
+    margin-bottom: $gutter-width-small;
+    line-height: 2 * 1 / $header-font-size-factor;
 
     img {
-        width: 2em;
-        height: 2em;
+        width: $gutter-width-large;
+        height: $gutter-width-large;
     }
 
     time {
@@ -44,15 +56,12 @@ header {
     .presents {
         background-image: image-url("present-tight.svg");
         background-repeat: no-repeat;
-        @include background-size(2em 2em);
+        @include background-size($gutter-width-large $gutter-width-large);
         display: inline-block;
-        height: 2em;
-        padding-left: 2.1em;
-        line-height: 2 * 1 / 0.9;
+        height: $gutter-width-large;
+        padding-left: $gutter-width-large + 0.1rem;
     }
 }
-
-
 
 @include media-orientation-query(landscape) {
     .column {

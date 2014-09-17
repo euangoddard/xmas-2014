@@ -1,3 +1,5 @@
+// Mixins
+
 @mixin media-width-query($device-width) {
     @media screen and (max-width: $device-width) {
         @content;
@@ -16,6 +18,13 @@
     -o-background-size: $size;
     background-size: $size;
 }
+
+@mixin equal-dimensions($dimension) {
+    width: $dimension;
+    height: $dimension;
+}
+
+// Functions
 
 @function image-url($image-path) {
     @return url("../img/" + $image-path);

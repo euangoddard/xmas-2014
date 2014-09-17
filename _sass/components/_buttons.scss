@@ -1,15 +1,19 @@
 @import "_colours";
 @import "_utils";
 
+
+$button-size: 5rem;
+$button-size-large: 2 * $button-size;
+
+
 .btn-round {
     background-color: $colour-red;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    display: block;
     border-radius: 50%;
+    display: block;
     border: none;
-    width: 5em;
-    height: 5em;
+    @include equal-dimensions($button-size);
     
     &:hover {
         background-color: $colour-red-light;
@@ -28,12 +32,21 @@
     }
 }
 
+
 .btn-present {
     background-image: image-url("present-tight.svg");
-    width: 10em;
-    height: 10em;
+    @include equal-dimensions($button-size-large);
     @include background-size(80%);
 }
+
+.btn-start {
+    color: $colour-white;
+    font-size: 3rem;
+    @include equal-dimensions($button-size-large);
+    display: block;
+    margin: 1em auto;
+}
+
 
 $button-types: elf reindeer santa sleigh;
 @each $button-type in $button-types {
