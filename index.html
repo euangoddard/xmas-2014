@@ -17,7 +17,7 @@
         <h4>Target: 1.87 billion</h4>
         <h4>Current: {{ presents | number }}</h4>
         <div>
-          <button type="button" ng-click="game_ctrl.make_present()" class="btn-round btn-present">
+          <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present">
           </button>
           <button ng-click="game_ctrl.start()" type="button" class="button">Start</button>
           <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
@@ -28,7 +28,7 @@
           <h3>{{ item.label }}</h3>
           <dl class="item-data">
             <dt>Cost</dt>
-            <dd>{{ item.cost | number }}</dd>
+            <dd>{{ item | cost | number }}</dd>
             <dt>Quantity</dt>
             <dd>{{ item.quantity | number }}</dd>
             <dt>Benefit</dt>
@@ -37,7 +37,7 @@
           <button
             type="button"
             class="btn-round btn-{{ item.id }}"
-            ng-disabled="presents < item.cost"
+            ng-disabled="presents < (item | cost)"
             ng-click="game_ctrl.buy_item(item)"
           ></button>
         </div>

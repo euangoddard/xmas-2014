@@ -9,34 +9,49 @@
         $scope.is_running = false;
         $scope.date = new Date(2013, 11, 26);
         $scope.presents = 0;
+        
+        var no_tick_benefit = function () {return 0;};
+        var no_click_benefit = function () {return 1;};
         $scope.items = [
             {
                 id: 'elf',
-                cost: 10,
+                base_cost: 10,
                 label: 'Elf',
-                effect: 10,
-                quantity: 0
-            },
-            {
-                id: 'reindeer',
-                cost: 100,
-                label: 'Reindeer',
-                effect: 20,
-                quantity: 0
+                effect: 'Makes 20 presents per day',
+                quantity: 0,
+                tick_benefit: function () {
+                    return this.quantity * 10;
+                },
+                click_benefit: no_click_benefit
             },
             {
                 id: 'santa',
-                cost: 1000,
+                base_cost: 1000,
                 label: 'Santa upgrade',
-                effect: 30,
-                quantity: 0
+                effect: 'Increase Santa\'s efficiency 2%',
+                quantity: 0,
+                tick_benefit: no_tick_benefit,
+                click_benefit: function () {
+                    return Math.pow(1.02, this.quantity);
+                }
+            },
+            {
+                id: 'reindeer',
+                base_cost: 100,
+                label: 'Reindeer',
+                effect: 'Pull a sleigh containing 10,000 presents',
+                quantity: 0,
+                tick_benefit: no_tick_benefit,
+                click_benefit: no_click_benefit
             },
             {
                 id: 'sleigh',
-                cost: 10000,
+                base_cost: 10000,
                 label: 'Sleigh upgrade',
-                effect: 40,
-                quantity: 0
+                effect: 'Store 100,000 presents for deliver per upgrade',
+                quantity: 0,
+                tick_benefit: no_tick_benefit,
+                click_benefit: no_click_benefit
             }
         ];
 
@@ -46,9 +61,9 @@
 
                 var presents_to_increment = 0;
                 angular.forEach($scope.items, function (item) {
-                    presents_to_increment += (item.effect * item.quantity);
+                    presents_to_increment += item.tick_benefit();
                 });
-                $scope.presents += presents_to_increment;
+                $scope.presents += parseInt(presents_to_increment, 10);
             }
         });
 
@@ -60,17 +75,31 @@
             $scope.is_running = false;
         };
 
-        this.make_present = function () {
-            $scope.presents += 1;
+        this.make_presents = function () {
+            var presents_to_increment = 1;
+            angular.forEach($scope.items, function (item) {
+                presents_to_increment *= item.click_benefit();
+            });
+            $scope.presents += parseInt(presents_to_increment, 10);
         };
 
         this.buy_item = function (item) {
-            if (item.cost <= $scope.presents) {
+            if (get_item_cost(item) <= $scope.presents) {
                 $scope.presents -= item.cost;
                 item.quantity += 1;
             }
         };
+
         
+    });
+
+    var get_item_cost = function (item) {
+        var item_cost = item.base_cost * Math.pow(1.15, item.quantity);
+        return parseInt(item_cost, 10);
+    };
+
+    xmas.filter('cost', function () {
+        return get_item_cost;
     });
 
 
