@@ -48,6 +48,13 @@
                 }
             },
             {
+                id: 'elf-trainer',
+                base_cost: 100,
+                label: 'Reindeer trainer',
+                effect: 'Increases the ability of reindeer to pull the sleigh over time',
+                quantity: 0
+            },
+            {
                 id: 'sleigh',
                 base_cost: 10000,
                 label: 'Sleigh upgrade',
@@ -57,6 +64,13 @@
                 get_total_capacity: function () {
                     return this.quantity * this.unit_capacity;
                 }
+            },
+            {
+                id: 'elf-mechanic',
+                base_cost: 100,
+                label: 'Sleigh mechanic',
+                effect: 'Increases the capacity of the sleigh over time',
+                quantity: 0
             }
         ];
 

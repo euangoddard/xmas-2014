@@ -48,7 +48,7 @@ $button-size-large: 2 * $button-size;
 }
 
 
-$button-types: elf reindeer santa sleigh;
+$button-types: elf reindeer santa sleigh elf-trainer elf-mechanic;
 @each $button-type in $button-types {
     .btn-#{$button-type} {
         background-image: image-url("#{$button-type}.svg");
