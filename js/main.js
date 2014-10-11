@@ -22,7 +22,7 @@
                 label: 'Elf',
                 effect: 'Makes 20 presents per day',
                 quantity: 0,
-                tick_benefit: function () {
+                tick_presents_benefit: function () {
                     return this.quantity * 10;
                 }
             },
@@ -52,7 +52,10 @@
                 base_cost: 100,
                 label: 'Reindeer trainer',
                 effect: 'Increases the ability of reindeer to pull the sleigh over time',
-                quantity: 0
+                quantity: 0,
+                tick_power_benefit: function () {
+                    return Math.pow(1.02, this.quantity);
+                }
             },
             {
                 id: 'sleigh',
@@ -70,7 +73,10 @@
                 base_cost: 100,
                 label: 'Sleigh mechanic',
                 effect: 'Increases the capacity of the sleigh over time',
-                quantity: 0
+                quantity: 0,
+                tick_capacity_benefit: function () {
+                    return Math.pow(1.02, this.quantity);
+                }
             }
         ];
 
@@ -80,11 +86,28 @@
 
                 var presents_to_increment = 0;
                 angular.forEach($scope.items, function (item) {
-                    if (angular.isFunction(item.tick_benefit)) {
-                        presents_to_increment += item.tick_benefit();
+                    if (angular.isFunction(item.tick_presents_benefit)) {
+                        presents_to_increment += item.tick_presents_benefit();
                     }
                 });
                 $scope.presents += parseInt(presents_to_increment, 10);
+
+                var power_to_increment = 0;
+                angular.forEach($scope.items, function (item) {
+                    if (angular.isFunction(item.tick_power_benefit)) {
+                        power_to_increment += item.tick_power_benefit();
+                    }
+                });
+                $scope.sleigh.power += power_to_increment;
+
+                var capacity_to_increment = 0;
+                angular.forEach($scope.items, function (item) {
+                    if (angular.isFunction(item.tick_capacity_benefit)) {
+                        capacity_to_increment += item.tick_capacity_benefit();
+                    }
+                });
+                $scope.sleigh.capacity += capacity_to_increment;
+                
             }
         });
 
