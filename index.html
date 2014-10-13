@@ -9,7 +9,7 @@
   <body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
     <header>
         <time>{{ date | amDateFormat:'Do MMMM YYYY a' }}</time>
-        <span class="presents" ng-bind="presents | number"></span>
+        <span class="presents" ng-bind="sleigh.presents | number"></span>
     </header>
 
     <div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
@@ -62,7 +62,7 @@
             <dt>Target</dt>
             <dd>1.87 billion</dd>
             <dt>Current</dt>
-            <dd>{{ presents | number }}</dd>
+            <dd>{{ sleigh.presents | number }}</dd>
           </dl>
           <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
         </div>
@@ -94,7 +94,7 @@
           <button
             type="button"
             class="btn-round btn-{{ item.id }}"
-            ng-disabled="presents < (item | cost)"
+            ng-disabled="sleigh.presents < (item | cost)"
             ng-click="game_ctrl.buy_item(item)"
           ></button>
         </div>
