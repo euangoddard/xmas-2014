@@ -30,7 +30,7 @@
             },
             {
                 id: 'santa',
-                base_cost: 1000,
+                base_cost: 500,
                 label: 'Santa upgrade',
                 effect: 'Increase Santa\'s efficiency 2%',
                 quantity: 0,
@@ -53,20 +53,20 @@
             },
             {
                 id: 'elf-trainer',
-                base_cost: 100,
+                base_cost: 250,
                 label: 'Reindeer trainer',
                 effect: 'Increases the ability of reindeer to pull the sleigh over time',
                 quantity: 0,
                 unit_effect: 1.02,
                 on_tick: function () {
                     if (this.quantity) {
-                        $scope.sleigh.power += pow(this.unit_effect, this.quantity);
+                        $scope.sleigh.power = parseInt($scope.sleigh.power * Math.pow(this.unit_effect, this.quantity), 10);
                     }
                 }
             },
             {
                 id: 'sleigh',
-                base_cost: 10000,
+                base_cost: 1000,
                 label: 'Sleigh upgrade',
                 effect: 'Store 100,000 presents for delivery',
                 quantity: 0,
@@ -77,14 +77,14 @@
             },
             {
                 id: 'elf-mechanic',
-                base_cost: 100,
+                base_cost: 2500,
                 label: 'Sleigh mechanic',
                 effect: 'Increases the capacity of the sleigh over time',
                 quantity: 0,
                 unit_effect: 1.02,
                 on_tick: function () {
                     if (this.quantity) {
-                        $scope.sleigh.capacity += pow(this.unit_effect, this.quantity);
+                        $scope.sleigh.capacity = parseInt($scope.sleigh.capacity * Math.pow(this.unit_effect, this.quantity), 10);
                     }
                 }
             }
