@@ -1,4 +1,4 @@
-    (function (angular) {
+(function (angular) {
     'use strict';
 
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'storage']);
