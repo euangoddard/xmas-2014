@@ -40,6 +40,20 @@
                 }
             },
             {
+                id: 'duplicate',
+                base_cost: 50,
+                label: 'Present duplicator',
+                effect: 'Duplicate a percentage presents',
+                quantity: 1,
+                unit_effect: 0.01,
+                on_tick: function () {
+                    if (this.quantity) {
+                        var effect = 1 + (this.unit_effect * this.quantity);
+                        $scope.sleigh.presents = Math.floor($scope.sleigh.presents * effect);
+                    }
+                }
+            },
+            {
                 id: 'reindeer',
                 base_cost: 100,
                 label: 'Reindeer',
