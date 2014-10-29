@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'storage']);
+    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
 
     var SANTAS_MOODS = [
         {label: 'Picky (fewest children get presents)', factor: 0.5},

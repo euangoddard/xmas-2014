@@ -9,7 +9,7 @@
   <body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
     <header>
         <time>{{ date | amDateFormat:'Do MMMM YYYY a' }}</time>
-        <span class="presents" ng-bind="sleigh.presents | number"></span>
+        <span class="presents" ng-bind="sleigh.presents | humanize_number"></span>
     </header>
 
     <div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
@@ -60,9 +60,9 @@
         <div class="item">
           <dl class="item-data">
             <dt>Target</dt>
-            <dd>1.87 billion</dd>
+            <dd>{{ 1870000000 | humanize_number }}</dd>
             <dt>Current</dt>
-            <dd>{{ sleigh.presents | number }}</dd>
+            <dd>{{ sleigh.presents | humanize_number }}</dd>
           </dl>
           <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
         </div>
@@ -71,9 +71,9 @@
         <div class="item">
           <dl class="item-data">
             <dt>Sleigh capacity</dt>
-            <dd>{{ sleigh.capacity | number }} presents</dd>
+            <dd>{{ sleigh.capacity | humanize_number }} presents</dd>
             <dt>Reindeer pulling power</dt>
-            <dd>{{ sleigh.power | number }}</dd>
+            <dd>{{ sleigh.power | humanize_number }}</dd>
           </dl>
         </div>
 
@@ -85,9 +85,9 @@
           <h3>{{ item.label }}</h3>
           <dl class="item-data">
             <dt>Cost</dt>
-            <dd>{{ item | cost | number }}</dd>
+            <dd>{{ item | cost | humanize_number }}</dd>
             <dt>Quantity</dt>
-            <dd>{{ item.quantity | number }}</dd>
+            <dd>{{ item.quantity | humanize_number }}</dd>
             <dt>Benefit</dt>
             <dd>{{ item.effect }}</dd>
           </dl>
@@ -106,6 +106,7 @@
     <script src="js/lib/angular-moment.min.js"></script>
 
     <script src="js/ticker.js"></script>
+    <script src="js/humanize.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/main.js"></script>
   </body>
