@@ -12,93 +12,98 @@
         <span class="presents" ng-bind="sleigh.presents | humanize_number"></span>
     </header>
 
-    <div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
+    <div ng-if="!is_over">
+      <div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
+          <section class="column">
+            <h1>Merry Christmas and a Happy 2015!</h1>
+            <h2>The story so far...</h2>
+            <p>
+              After a hectic Christmas 2013, Father Christmas has returned to the North Pole feeling sapped of energy, only to find all his elves has walked out. Worse still when he wakes up on Boxing Day, the reindeer have run off and someone has stolen his sleigh.
+            </p>
+            <h2>The objectives</h2>
+            <ol>
+              <li>
+                Help Father Christmas make enough presents for all the <em>nice</em> children. He can use the presents to hire elves to help him make more presents.
+              </li>
+              <li>
+                Buy a new sleigh and upgrade it to ensure that it can carry all the presents.
+              </li>
+              <li>
+                Buy reindeer to pull the sleigh &mdash; ensure that you have enough reindeer to pull the sleigh when it's laden with presents.
+              </li>
+            </ol>
+          </section>
+          <section class="column">
+            <h2>Ready?</h2>
+            <label for="santas-mood">
+              How picky do you want Father Christmas to be?
+            </label>
+            <select
+              id="santas-mood"
+              ng-model="santas_mood"
+              ng-options="mood as mood.label for mood in santas_moods"
+            ></select>
+            <button
+              ng-click="game_ctrl.start()"
+              type="button"
+              class="btn-round btn-start"
+            >
+              Start
+            </button>
+          </section>
+      </div>
+
+      <div class="row" ng-if="is_running">
         <section class="column">
-          <h1>Merry Christmas and a Happy 2015!</h1>
-          <h2>The story so far...</h2>
-          <p>
-            After a hectic Christmas 2013, Father Christmas has returned to the North Pole feeling sapped of energy, only to find all his elves has walked out. Worse still when he wakes up on Boxing Day, the reindeer have run off and someone has stolen his sleigh.
-          </p>
-          <h2>The objectives</h2>
-          <ol>
-            <li>
-              Help Father Christmas make enough presents for all the <em>nice</em> children. He can use the presents to hire elves to help him make more presents.
-            </li>
-            <li>
-              Buy a new sleigh and upgrade it to ensure that it can carry all the presents.
-            </li>
-            <li>
-              Buy reindeer to pull the sleigh &mdash; ensure that you have enough reindeer to pull the sleigh when it's laden with presents.
-            </li>
-          </ol>
+          <h2>Status</h2>
+
+          <h3>Presents</h3>
+          <div class="item">
+            <dl class="item-data">
+              <dt>Target</dt>
+              <dd>{{ target_presents | humanize_number }}</dd>
+              <dt>Current</dt>
+              <dd>{{ sleigh.presents | humanize_number }}</dd>
+            </dl>
+            <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
+          </div>
+          
+          <h3>Sleigh capabilities</h3>
+          <div class="item">
+            <dl class="item-data">
+              <dt>Sleigh capacity</dt>
+              <dd>{{ sleigh.capacity | humanize_number }} presents</dd>
+              <dt>Reindeer pulling power</dt>
+              <dd>{{ sleigh.power | humanize_number }}</dd>
+            </dl>
+          </div>
+
+            <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
         </section>
         <section class="column">
-          <h2>Ready?</h2>
-          <label for="santas-mood">
-            How picky do you want Father Christmas to be?
-          </label>
-          <select
-            id="santas-mood"
-            ng-model="santas_mood"
-            ng-options="mood as mood.label for mood in santas_moods"
-          ></select>
-          <button
-            ng-click="game_ctrl.start()"
-            type="button"
-            class="btn-round btn-start"
-          >
-            Start
-          </button>
+          <h2>Upgrades</h2>
+          <div ng-repeat="item in items" class="item">
+            <h3>{{ item.label }}</h3>
+            <dl class="item-data">
+              <dt>Cost</dt>
+              <dd>{{ item | cost | humanize_number }}</dd>
+              <dt>Quantity</dt>
+              <dd>{{ item.quantity | humanize_number }}</dd>
+              <dt>Benefit</dt>
+              <dd>{{ item.effect }}</dd>
+            </dl>
+            <button
+              type="button"
+              class="btn-round btn-{{ item.id }}"
+              ng-disabled="sleigh.presents < (item | cost)"
+              ng-click="game_ctrl.buy_item(item)"
+            ></button>
+          </div>
         </section>
+      </div>
     </div>
-
-    <div class="row" ng-if="is_running">
-      <section class="column">
-        <h2>Status</h2>
-
-        <h3>Presents</h3>
-        <div class="item">
-          <dl class="item-data">
-            <dt>Target</dt>
-            <dd>{{ 1870000000 | humanize_number }}</dd>
-            <dt>Current</dt>
-            <dd>{{ sleigh.presents | humanize_number }}</dd>
-          </dl>
-          <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
-        </div>
-        
-        <h3>Sleigh capabilities</h3>
-        <div class="item">
-          <dl class="item-data">
-            <dt>Sleigh capacity</dt>
-            <dd>{{ sleigh.capacity | humanize_number }} presents</dd>
-            <dt>Reindeer pulling power</dt>
-            <dd>{{ sleigh.power | humanize_number }}</dd>
-          </dl>
-        </div>
-
-          <button ng-click="game_ctrl.pause()" type="button" class="button">Pause</button>
-      </section>
-      <section class="column">
-        <h2>Upgrades</h2>
-        <div ng-repeat="item in items" class="item">
-          <h3>{{ item.label }}</h3>
-          <dl class="item-data">
-            <dt>Cost</dt>
-            <dd>{{ item | cost | humanize_number }}</dd>
-            <dt>Quantity</dt>
-            <dd>{{ item.quantity | humanize_number }}</dd>
-            <dt>Benefit</dt>
-            <dd>{{ item.effect }}</dd>
-          </dl>
-          <button
-            type="button"
-            class="btn-round btn-{{ item.id }}"
-            ng-disabled="sleigh.presents < (item | cost)"
-            ng-click="game_ctrl.buy_item(item)"
-          ></button>
-        </div>
-      </section>
+    <div ng-if="is_over">
+      All done!
     </div>
     
     <script src="js/lib/angular.min.js"></script>

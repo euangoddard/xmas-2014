@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
+    var CHILDREN_ON_EARTH = 1.87E9;
 
     var SANTAS_MOODS = [
         {label: 'Picky (fewest children get presents)', factor: 0.5},
@@ -9,28 +9,36 @@
         {label: 'Easy-going (most children get presents)', factor: 0.7},
     ];
 
+    var DATES = {
+        START: new Date(2013, 11, 26),
+        END: new Date(2013, 11, 29)
+    }
+
+    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
+
     xmas.controller('GameCtrl', function ($scope, Ticker) {
         $scope.ticks = [];
         $scope.is_running = false;
-        $scope.date = new Date(2013, 11, 26);
+        $scope.is_over = false;
+        $scope.date = DATES.START;
         
         $scope.sleigh = {capacity: 0, power: 0, presents: 0};
         
         $scope.items = [
             {
                 id: 'elf',
-                base_cost: 10,
+                base_cost: 15,
                 label: 'Elf',
-                effect: 'Makes 20 presents per day',
+                effect: 'Make 100 presents per day',
                 quantity: 0,
-                unit_presents: 10,
+                unit_presents: 50,
                 on_tick: function () {
                     $scope.sleigh.presents += (this.quantity * this.unit_presents);
                 }
             },
             {
                 id: 'santa',
-                base_cost: 500,
+                base_cost: 100,
                 label: 'Santa upgrade',
                 effect: 'Increase Santa\'s efficiency 2%',
                 quantity: 0,
@@ -41,10 +49,10 @@
             },
             {
                 id: 'duplicate',
-                base_cost: 50,
+                base_cost: 20000,
                 label: 'Present duplicator',
-                effect: 'Duplicate a percentage presents',
-                quantity: 1,
+                effect: 'Duplicate a percentage of presents',
+                quantity: 0,
                 unit_effect: 0.01,
                 on_tick: function () {
                     if (this.quantity) {
@@ -55,7 +63,7 @@
             },
             {
                 id: 'reindeer',
-                base_cost: 100,
+                base_cost: 500,
                 label: 'Reindeer',
                 effect: 'Pull a sleigh containing 10,000 presents',
                 quantity: 0,
@@ -67,9 +75,9 @@
             },
             {
                 id: 'elf-trainer',
-                base_cost: 250,
+                base_cost: 5000,
                 label: 'Reindeer trainer',
-                effect: 'Increases the ability of reindeer to pull the sleigh over time',
+                effect: 'Increase reindeer power over time',
                 quantity: 0,
                 unit_effect: 1.02,
                 on_tick: function () {
@@ -80,9 +88,9 @@
             },
             {
                 id: 'sleigh',
-                base_cost: 1000,
+                base_cost: 1500,
                 label: 'Sleigh upgrade',
-                effect: 'Store 100,000 presents for delivery',
+                effect: 'Store 100,000 presents',
                 quantity: 0,
                 unit_effect: 100000,
                 on_buy: function () {
@@ -91,9 +99,9 @@
             },
             {
                 id: 'elf-mechanic',
-                base_cost: 2500,
+                base_cost: 10000,
                 label: 'Sleigh mechanic',
-                effect: 'Increases the capacity of the sleigh over time',
+                effect: 'Increase sleigh capacity over time',
                 quantity: 0,
                 unit_effect: 1.02,
                 on_tick: function () {
@@ -107,12 +115,16 @@
         Ticker.tick(function () {
             if ($scope.is_running) {
                 $scope.date = moment($scope.date).add(12, 'hours');
-
-                angular.forEach($scope.items, function (item) {
-                    if (angular.isFunction(item.on_tick)) {
-                        item.on_tick();
-                    };
-                });
+                if ($scope.date.isBefore(DATES.END)) {
+                    angular.forEach($scope.items, function (item) {
+                        if (angular.isFunction(item.on_tick)) {
+                            item.on_tick();
+                        };
+                    });
+                } else {
+                    $scope.is_over = true;
+                    $scope.is_running = false;
+                }
             }
         });
 
@@ -120,8 +132,8 @@
             $scope.is_running = true;
         };
 
-        this.pause = function () {
-            $scope.is_running = false;
+        this.set_target_presents = function (presents) {
+            $scope.target_presents = presents;
         };
 
         this.make_presents = function () {
@@ -152,6 +164,13 @@
     xmas.controller('SetupCtrl', function ($scope) {
         $scope.santas_moods = SANTAS_MOODS;
         $scope.santas_mood = SANTAS_MOODS[0];
+
+        $scope.$watch('santas_mood', function (mood) {
+            if (mood) {
+                var presents = CHILDREN_ON_EARTH * mood.factor;
+                $scope.game_ctrl.set_target_presents(presents);
+            }
+        });
     });
 
     xmas.filter('cost', function () {
