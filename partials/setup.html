@@ -1,0 +1,39 @@
+<div class="row" ng-if="!is_running" ng-controller="SetupCtrl as setup_ctrl">
+  <section class="column">
+    <h1>Merry Christmas and a Happy 2015!</h1>
+    <h2>The story so far...</h2>
+    <p>
+      After a hectic Christmas 2013, Father Christmas has returned to the North Pole feeling sapped of energy, only to find all his elves has walked out. Worse still when he wakes up on Boxing Day, the reindeer have run off and someone has stolen his sleigh.
+    </p>
+    <h2>The objectives</h2>
+    <ol>
+      <li>
+        Help Father Christmas make enough presents for all the <em>nice</em> children. He can use the presents to hire elves to help him make more presents.
+      </li>
+      <li>
+        Buy a new sleigh and upgrade it to ensure that it can carry all the presents.
+      </li>
+      <li>
+        Buy reindeer to pull the sleigh &mdash; ensure that you have enough reindeer to pull the sleigh when it's laden with presents.
+      </li>
+    </ol>
+  </section>
+  <section class="column">
+    <h2>Ready?</h2>
+    <label for="santas-mood">
+      How picky do you want Father Christmas to be?
+    </label>
+    <select
+      id="santas-mood"
+      ng-model="santas_mood"
+      ng-options="mood as mood.label for mood in santas_moods"
+    ></select>
+    <button
+      ng-click="game_ctrl.start()"
+      type="button"
+      class="btn-round btn-start"
+    >
+      Start
+    </button>
+  </section>
+</div>

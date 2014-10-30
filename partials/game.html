@@ -1,0 +1,47 @@
+<div class="row" ng-if="is_running">
+  <section class="column">
+    <h2>Status</h2>
+
+    <h3>Presents</h3>
+    <div class="item">
+      <dl class="item-data">
+        <dt>Target</dt>
+        <dd>{{ target_presents | humanize_number }}</dd>
+        <dt>Current</dt>
+        <dd>{{ sleigh.presents | humanize_number }}</dd>
+      </dl>
+      <button type="button" ng-click="game_ctrl.make_presents()" class="btn-round btn-present"></button>
+    </div>
+    
+    <h3>Sleigh capabilities</h3>
+    <div class="item">
+      <dl class="item-data">
+        <dt>Sleigh capacity</dt>
+        <dd>{{ sleigh.capacity | humanize_number }} presents</dd>
+        <dt>Reindeer pulling power</dt>
+        <dd>{{ sleigh.power | humanize_number }}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="column">
+    <h2>Upgrades</h2>
+    <div ng-repeat="item in items" class="item">
+      <h3>{{ item.label }}</h3>
+      <dl class="item-data">
+        <dt>Cost</dt>
+        <dd>{{ item | cost | humanize_number }}</dd>
+        <dt>Quantity</dt>
+        <dd>{{ item.quantity | humanize_number }}</dd>
+        <dt>Benefit</dt>
+        <dd>{{ item.effect }}</dd>
+      </dl>
+      <button
+        type="button"
+        class="btn-round btn-{{ item.id }}"
+        ng-disabled="sleigh.presents < (item | cost)"
+        ng-click="game_ctrl.buy_item(item)"
+      ></button>
+    </div>
+  </section>
+</div>
