@@ -11,7 +11,7 @@
 
     var DATES = {
         START: new Date(2013, 11, 26),
-        END: new Date(2013, 11, 29)
+        END: new Date(2014, 12, 25)
     }
 
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
@@ -23,6 +23,15 @@
         $scope.date = DATES.START;
         
         $scope.sleigh = {capacity: 0, power: 0, presents: 0};
+
+        var sleigh_item_incrementer = function (item) {
+            return function () {
+                if (this.quantity) {
+                    var effect = 1 + (this.unit_effect * this.quantity);
+                    $scope.sleigh[item] = Math.floor($scope.sleigh[item] * effect);
+                }
+            }
+        }
         
         $scope.items = [
             {
@@ -54,12 +63,7 @@
                 effect: 'Duplicate a percentage of presents',
                 quantity: 0,
                 unit_effect: 0.01,
-                on_tick: function () {
-                    if (this.quantity) {
-                        var effect = 1 + (this.unit_effect * this.quantity);
-                        $scope.sleigh.presents = Math.floor($scope.sleigh.presents * effect);
-                    }
-                }
+                on_tick: sleigh_item_incrementer('presents')
             },
             {
                 id: 'reindeer',
@@ -79,12 +83,8 @@
                 label: 'Reindeer trainer',
                 effect: 'Increase reindeer power over time',
                 quantity: 0,
-                unit_effect: 1.02,
-                on_tick: function () {
-                    if (this.quantity) {
-                        $scope.sleigh.power = parseInt($scope.sleigh.power * Math.pow(this.unit_effect, this.quantity), 10);
-                    }
-                }
+                unit_effect: 0.01,
+                on_tick: sleigh_item_incrementer('power')
             },
             {
                 id: 'sleigh',
@@ -103,12 +103,8 @@
                 label: 'Sleigh mechanic',
                 effect: 'Increase sleigh capacity over time',
                 quantity: 0,
-                unit_effect: 1.02,
-                on_tick: function () {
-                    if (this.quantity) {
-                        $scope.sleigh.capacity = parseInt($scope.sleigh.capacity * Math.pow(this.unit_effect, this.quantity), 10);
-                    }
-                }
+                unit_effect: 0.01,
+                on_tick: sleigh_item_incrementer('capacity')
             }
         ];
 
