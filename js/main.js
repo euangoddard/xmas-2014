@@ -49,9 +49,9 @@
                 id: 'santa',
                 base_cost: 100,
                 label: 'Santa upgrade',
-                effect: 'Increase Santa\'s efficiency 2%',
+                effect: 'Increase Santa\'s efficiency 10%',
                 quantity: 0,
-                unit_effect: 1.02,
+                unit_effect: 1.1,
                 on_presents_making: function () {
                     $scope.sleigh.presents += pow(this.unit_effect, this.quantity);
                 }
