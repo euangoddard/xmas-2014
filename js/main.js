@@ -73,7 +73,7 @@
                 quantity: 0,
                 unit_effect: 10000,
                 on_buy: function () {
-                    $scope.sleigh.power += (this.unit_effect * this.quantity);
+                    $scope.sleigh.power += this.unit_effect;
                 }
 
             },
@@ -94,7 +94,7 @@
                 quantity: 0,
                 unit_effect: 100000,
                 on_buy: function () {
-                    $scope.sleigh.capacity += (this.unit_effect * this.quantity);
+                    $scope.sleigh.capacity += this.unit_effect;
                 }
             },
             {
