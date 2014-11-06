@@ -2,8 +2,8 @@
 ---
 @charset "utf-8";
 
-
-@import "_normalize";
-@import "_layout";
-@import "components/_buttons";
-@import "components/_items";
+@import "normalize";
+@import "layout";
+@import "components/buttons";
+@import "components/items";
+@import "components/yesno";

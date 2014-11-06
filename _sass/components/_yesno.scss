@@ -1,0 +1,20 @@
+@import "colours";
+@import "utils";
+
+.yes-no {
+    display: inline-block;
+    border-radius: 50%;
+    color: $colour-white;
+    @include equal-dimensions(1.2rem);
+    line-height: 1.2;
+    text-align: center;
+    font-weight: bold;
+
+    &.no {
+        background-color: $colour-red;
+    }
+
+    &.yes {
+        background-color: $colour-green;
+    }
+}

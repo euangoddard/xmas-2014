@@ -1,8 +1,30 @@
 <div class="row">
-  <h1>All done!</h1>
-  <p>Christmas has come around again. Let's see how you did</p>
-  <dl>
-    <dt>Presents required</dt>
-    <dd>{{ target_presents | humanize_number }}</dd>
-  </dl>
+  <h1>All done</h1>
+  <h2 ng-if="is_time_over">Christmas has come around again.<h2>
+  <h2 ng-if="!is_time_over">You hit all your targets!<h2>
+  
+  <h3>You needed to produce, have a sleigh large enough to carry, and sufficient reindeer power to pull <strong>{{ target_presents | humanize_number }}</strong> presents.</h3>
+  <ul>
+    <li>
+      You made <strong>{{ sleigh.presents | humanize_number }}</strong> presents
+      <yes-no target="target_presents" actual="sleigh.presents">
+    </li>
+    <li>
+      Your sleigh could hold <strong>{{ sleigh.capacity | humanize_number }}</strong> presents
+      <yes-no target="target_presents" actual="sleigh.capacity">
+    </li>
+    <li>
+      You had enough reindeer power to pull a sleigh containing <strong>{{ sleigh.power | humanize_number }}</strong> presents
+      <yes-no target="target_presents" actual="sleigh.power">
+    </li>
+  </ul>
+
+  <h2 ng-if="!is_time_over">You managed this by {{ date | amDateFormat:'Do MMMM YYYY (a)' }}</h2>
+  <button
+    type="button"
+    class="btn-round btn-play-again"
+    ng-click="game_ctrl.restart()"
+  >
+    Again!
+  </button>
 </div>

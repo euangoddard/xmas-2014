@@ -11,7 +11,7 @@
 
     var DATES = {
         START: new Date(2013, 11, 26),
-        END: new Date(2014, 12, 25)
+        END: new Date(2014, 11, 25)
     }
 
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
@@ -22,7 +22,7 @@
         $scope.is_over = false;
         $scope.date = DATES.START;
         
-        $scope.sleigh = {capacity: 0, power: 0, presents: 0};
+        $scope.sleigh = {capacity: 1E9, power: 2E9, presents: 9.34E8};
 
         var sleigh_item_incrementer = function (item) {
             return function () {
@@ -119,10 +119,24 @@
                     });
                 } else {
                     $scope.is_over = true;
+                    $scope.is_time_over = true;
                     $scope.is_running = false;
                 }
             }
         });
+
+        $scope.$watch('sleigh', function (sleigh) {
+            var is_end_game_met = true;
+            angular.forEach(sleigh, function (item_count) {
+                console.log($scope.target_presents, item_count);
+                is_end_game_met &= ($scope.target_presents <= item_count);
+            });
+            if (is_end_game_met) {
+                $scope.is_over = true;
+                $scope.is_time_over = false;
+                $scope.is_running = false;
+            }
+        }, true);
 
         this.start = function () {
             $scope.is_running = true;
@@ -171,6 +185,17 @@
 
     xmas.filter('cost', function () {
         return get_item_cost;
+    });
+
+    xmas.directive('yesNo', function () {
+        return {
+            restrict: 'E',
+            scope: {
+                target: '=',
+                actual: '='
+            },
+            templateUrl: '../partials/yes-no.html'
+        }
     });
 
     var pow = function (base, power) {
