@@ -17,21 +17,14 @@
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
 
     xmas.controller('GameCtrl', function ($scope, Ticker) {
-        $scope.ticks = [];
-        $scope.is_running = false;
-        $scope.is_over = false;
-        $scope.date = DATES.START;
-        
-        $scope.sleigh = {capacity: 1E9, power: 2E9, presents: 9.34E8};
-
         var sleigh_item_incrementer = function (item) {
             return function () {
                 if (this.quantity) {
                     var effect = 1 + (this.unit_effect * this.quantity);
                     $scope.sleigh[item] = Math.floor($scope.sleigh[item] * effect);
                 }
-            }
-        }
+            };
+        };
         
         $scope.items = [
             {
@@ -108,6 +101,18 @@
             }
         ];
 
+        this.reset = function () {
+            $scope.is_running = false;
+            $scope.is_over = false;
+            $scope.is_time_over = false;
+            $scope.date = DATES.START;
+            $scope.sleigh = {capacity: 0, power: 0, presents: 0};
+            angular.forEach($scope.items, function (item) {
+                item.quantity = 0;
+            });
+        };
+        this.reset();
+
         Ticker.tick(function () {
             if ($scope.is_running) {
                 $scope.date = moment($scope.date).add(12, 'hours');
@@ -128,7 +133,6 @@
         $scope.$watch('sleigh', function (sleigh) {
             var is_end_game_met = true;
             angular.forEach(sleigh, function (item_count) {
-                console.log($scope.target_presents, item_count);
                 is_end_game_met &= ($scope.target_presents <= item_count);
             });
             if (is_end_game_met) {
