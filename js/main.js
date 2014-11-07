@@ -17,12 +17,18 @@
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
 
     xmas.controller('GameCtrl', function ($scope, Ticker) {
-        var sleigh_item_incrementer = function (item) {
+        var sleigh_time_incrementer = function (item) {
             return function () {
                 if (this.quantity) {
                     var effect = 1 + (this.unit_effect * this.quantity);
-                    $scope.sleigh[item] = Math.floor($scope.sleigh[item] * effect);
+                    $scope.sleigh[item] = cap_number($scope.sleigh[item] * effect);
                 }
+            };
+        };
+
+        var sleigh_buy_incrementer = function (item) {
+            return function () {
+                $scope.sleigh[item] = cap_number($scope.sleigh[item] + this.unit_effect);
             };
         };
         
@@ -35,7 +41,8 @@
                 quantity: 0,
                 unit_presents: 50,
                 on_tick: function () {
-                    $scope.sleigh.presents += (this.quantity * this.unit_presents);
+                    var new_presents = $scope.sleigh.presents + (this.quantity * this.unit_presents);
+                    $scope.sleigh.presents = cap_number(new_presents);
                 }
             },
             {
@@ -46,7 +53,8 @@
                 quantity: 0,
                 unit_effect: 1.1,
                 on_presents_making: function () {
-                    $scope.sleigh.presents += pow(this.unit_effect, this.quantity);
+                    var new_presents = $scope.sleigh.presents + Math.pow(this.unit_effect, this.quantity);
+                    $scope.sleigh.presents = cap_number(new_presents);
                 }
             },
             {
@@ -56,7 +64,7 @@
                 effect: 'Duplicate a percentage of presents',
                 quantity: 0,
                 unit_effect: 0.01,
-                on_tick: sleigh_item_incrementer('presents')
+                on_tick: sleigh_time_incrementer('presents')
             },
             {
                 id: 'reindeer',
@@ -65,9 +73,7 @@
                 effect: 'Pull a sleigh containing 10,000 presents',
                 quantity: 0,
                 unit_effect: 10000,
-                on_buy: function () {
-                    $scope.sleigh.power += this.unit_effect;
-                }
+                on_buy: sleigh_buy_incrementer('power')
 
             },
             {
@@ -77,7 +83,7 @@
                 effect: 'Increase reindeer power over time',
                 quantity: 0,
                 unit_effect: 0.01,
-                on_tick: sleigh_item_incrementer('power')
+                on_tick: sleigh_time_incrementer('power')
             },
             {
                 id: 'sleigh',
@@ -86,9 +92,7 @@
                 effect: 'Store 100,000 presents',
                 quantity: 0,
                 unit_effect: 100000,
-                on_buy: function () {
-                    $scope.sleigh.capacity += this.unit_effect;
-                }
+                on_buy: sleigh_buy_incrementer('capacity')
             },
             {
                 id: 'elf-mechanic',
@@ -97,7 +101,7 @@
                 effect: 'Increase sleigh capacity over time',
                 quantity: 0,
                 unit_effect: 0.01,
-                on_tick: sleigh_item_incrementer('capacity')
+                on_tick: sleigh_time_incrementer('capacity')
             }
         ];
 
@@ -202,9 +206,11 @@
         }
     });
 
-    var pow = function (base, power) {
-        return parseInt(Math.pow(base, power), 10);
-    }
+    var cap_number = function (number) {
+        var number_rounded = Math.floor(number);
+        var number_capped = (1E36 < number_rounded) ? Infinity : number_rounded;
+        return number_capped;
+    };
 
 
 }(window.angular));

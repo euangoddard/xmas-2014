@@ -21,6 +21,10 @@
 
     humanize.filter('humanize_number', function ($filter) {
         return function (number) {
+            if (!isFinite(number)) {
+                return 'plenty';
+            }
+
             var number_10_power = log10(number);
             var exponent_index = Math.floor((number_10_power - MIN_EXPONENT) / EXPONENT_STEP, 10);
             
