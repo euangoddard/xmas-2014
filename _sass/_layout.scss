@@ -38,13 +38,13 @@ header, footer {
     font-size: $gutter-width * $header-font-size-factor;
     background-color: $colour-red;
     color: $colour-white;
-    padding: $gutter-width-small $gutter-width;
 }
 header {
     top: 0;
     margin-bottom: $gutter-width-small;
     line-height: 2 * 1 / $header-font-size-factor;
     font-weight: 800;
+    padding: $gutter-width-small $gutter-width;
 
     img {
         width: $gutter-width-large;
@@ -66,6 +66,7 @@ header {
 }
 footer {
     bottom: 0;
+    padding: 0 $gutter-width;
 }
 
 @include media-orientation-query(landscape) {
