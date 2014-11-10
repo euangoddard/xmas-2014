@@ -12,7 +12,7 @@
     var DATES = {
         START: new Date(2013, 11, 26),
         END: new Date(2014, 11, 25)
-    }
+    };
 
     var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
 
@@ -125,7 +125,7 @@
                     angular.forEach($scope.items, function (item) {
                         if (angular.isFunction(item.on_tick)) {
                             item.on_tick();
-                        };
+                        }
                     });
                 } else {
                     $scope.is_over = true;
@@ -170,7 +170,7 @@
                 item.quantity += 1;
                 if (angular.isFunction(item.on_buy)) {
                     item.on_buy();
-                };
+                }
             }
         };
     });
@@ -204,7 +204,7 @@
                 actual: '='
             },
             templateUrl: '../partials/yes-no.html'
-        }
+        };
     });
 
     var cap_number = function (number) {
