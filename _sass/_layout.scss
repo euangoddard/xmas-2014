@@ -68,6 +68,11 @@ footer {
     bottom: 0;
     padding: 0 $gutter-width;
 }
+@include media-width-query(700px) {
+    footer {
+        position: static;
+    }
+}
 
 @include media-orientation-query(landscape) {
     .column {
