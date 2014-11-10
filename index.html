@@ -1,21 +1,19 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Xmas 2014 card</title>
-    <link rel="stylesheet" href="css/main.css" />
-  </head>
-  <body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
+---
+layout: default
+---
+
+<body ng-app="xmas" ng-controller="GameCtrl as game_ctrl">
     <header>
-        <time>{{ date | amDateFormat:'Do MMMM YYYY a' }}</time>
+        <time ng-bind="date | amDateFormat:'Do MMMM YYYY a'"></time>
         <span class="presents" ng-bind="sleigh.presents | humanize_number"></span>
     </header>
 
     <ng-include ng-hide="is_over" src="'partials/setup.html'"></ng-include>
     <ng-include ng-hide="is_over" src="'partials/game.html'"></ng-include>
     <ng-include ng-show="is_over" src="'partials/end.html'"></ng-include>
-    
+
+    {% include footer.html %}
+
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/moment.min.js"></script>
     <script src="js/lib/angular-moment.min.js"></script>
@@ -24,5 +22,4 @@
     <script src="js/humanize.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/main.js"></script>
-  </body>
-</html>
+</body>

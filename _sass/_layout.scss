@@ -30,19 +30,21 @@ body {
 }
 
 $header-font-size-factor: 0.9;
-header {
+header, footer {
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
     overflow: hidden;
     font-size: $gutter-width * $header-font-size-factor;
-    font-weight: 800;
     background-color: $colour-red;
     color: $colour-white;
     padding: $gutter-width-small $gutter-width;
+}
+header {
+    top: 0;
     margin-bottom: $gutter-width-small;
     line-height: 2 * 1 / $header-font-size-factor;
+    font-weight: 800;
 
     img {
         width: $gutter-width-large;
@@ -62,6 +64,9 @@ header {
         padding-left: $gutter-width-large + 0.1rem;
     }
 }
+footer {
+    bottom: 0;
+}
 
 @include media-orientation-query(landscape) {
     .column {
@@ -76,4 +81,18 @@ header {
         }
     }
 
+}
+
+
+.simple {
+    header a {
+        color: $colour-white;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .row a {
+        color: $colour-red;
+    }
 }
