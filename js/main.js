@@ -20,7 +20,7 @@
         var sleigh_time_incrementer = function (item) {
             return function () {
                 if (this.quantity) {
-                    var multiplicand = 2 * (Math.log(this.quantity));
+                    var multiplicand = 2 * (1 + Math.log(this.quantity));
                     var effect = 1 + (this.unit_effect * multiplicand);
                     $scope.sleigh[item] = cap_number($scope.sleigh[item] * effect);
                 }
