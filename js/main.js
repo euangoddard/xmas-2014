@@ -14,7 +14,7 @@
         END: new Date(2014, 11, 25)
     }
 
-    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize']);
+    var xmas = angular.module('xmas', ['angularMoment', 'ticker', 'humanize', 'storage']);
 
     xmas.controller('GameCtrl', function ($scope, Ticker) {
         var sleigh_time_incrementer = function (item) {
@@ -182,7 +182,9 @@
 
     xmas.controller('SetupCtrl', function ($scope) {
         $scope.santas_moods = SANTAS_MOODS;
-        $scope.santas_mood = SANTAS_MOODS[0];
+        if (!angular.isDefined($scope.santas_mood)) {
+            $scope.santas_mood = SANTAS_MOODS[0];
+        }
 
         $scope.$watch('santas_mood', function (mood) {
             if (mood) {
@@ -194,6 +196,27 @@
 
     xmas.filter('cost', function () {
         return get_item_cost;
+    });
+
+    xmas.controller('EndCtrl', function ($scope, storage) {
+        $scope.$parent.$watch('is_over', function (is_over) {
+            if (is_over) {
+                var storage_key = 'xmas-2014-bests';
+                var mood_key = $scope.target_presents;
+                var previous_bests = storage.get(storage_key) || {};
+                var previous_best_raw = previous_bests[mood_key];
+                var previous_best = previous_best_raw ? moment(previous_best_raw) : null;
+                $scope.previous_best = previous_best;
+
+                if (!$scope.is_time_over) {
+                    if (previous_best === null || previous_best.isAfter($scope.date)) {
+                        previous_bests[mood_key] = $scope.date.valueOf();
+                        storage.put(storage_key, previous_bests);
+                        $scope.new_best = true;
+                    }
+                }
+            }
+        });
     });
 
     xmas.directive('yesNo', function () {
