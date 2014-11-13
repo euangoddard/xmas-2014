@@ -26,7 +26,7 @@ The first step was creating mechanism for having a game *"tick"* which would run
 {% highlight javascript %}
 var start_animation_loop = function (callback) {
     var loop = function (timestamp) {
-        request_animation_frame(loop);
+        request_animation_frame(loop); // this is a wrapper to support vendor prefixing
         callback(timestamp);
     }
     loop();
@@ -52,4 +52,42 @@ ticker.factory('Ticker', function ($rootScope) {
 });
 {% endhighlight %}
 
-This is then used...
+This is then used by the main game controller as such:
+
+{% highlight javascript %}
+Ticker.tick(function () {
+    // code here gets called every 1000 ms
+});
+{% endhighlight %}
+
+The ticker tries to call the code about `1000 ms` apart, but since the `Ticker` service has to initiate a scope digest when it's time, the real interval will be at least this value depending on how much is done in the scope digest (and potentially other digests which might delay the `Ticker` initiates.
+
+Since the `Ticker` uses `requestAnimationFrame`, in some (mobile) browsers, the interval may be significantly longer than this period of the tab loses focus (or any other conditions are met which suppress the browser from firing the animation).
+
+Therefore, for both of the above reasons, any code in the controller cannot rely on a true time interval since this will not be representative of time in the game. Fortunately, for the most part it's pretty indistinguishable to simply increment the current "date" in the game by 12 hours every time there is a tick.
+
+### Setting the goals
+
+The initial idea for the game was for Father Christmas (the player) to produce sufficient presents to give presents to all children in the world when Christmas comes around. [Cookie Clicker](http://orteil.dashnet.org/cookieclicker/) was a great source of inspiration for the repeated clicking ([thanks, Gil]({{ site.baseurl}}thanks/)) and led on to some further ideas about what other purchases could be made.
+
+The main purchasing of presents was achieved by the viewing calling a method on the controller:
+
+{% highlight html %}
+<button type="button" ng-click="game_ctrl.make_presents()">
+{% endhighlight %}
+
+The method on the controller was initially quite straight-forward (it added one present to a variable in the `$scope`). Later on it evolved (see below).
+
+In a similar vein to *Cookie Clicker*, the main commodity that you produce is the base currency for all other purchases. I didn't want to replicate Cookie Clicker (which would have been no mean feat!) and so ancillary goals were conceived. These were:
+
+- Generating enough capacity in Father Christmas' sleigh to store the purchased presents
+- Generating enough reindeer power to pull the sleigh containing the presents
+
+There were many (crazy) other ideas suggested to me (and dreamt up late at night), but I decided to keep things relatively simple. The mechanism used to implement these items should lead to extensibility should any one care to do so in the future.
+
+The items which could be purchased, I encoded in the main (root) controller's scope (`GameCtrl`):
+
+{% highlight javascript %}
+$scope.items = [];
+{% endhighlight %}
+
