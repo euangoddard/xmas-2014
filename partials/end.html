@@ -21,9 +21,9 @@
 
   <div ng-if="!is_time_over">
     <h2>You managed this by {{ date | amDateFormat:'Do MMMM YYYY (a)' }}</h2>
-    <p ng-if="previous_best">
+    <p ng-if="previous_best" class="best">
       Your previous best when aiming for <em>{{ target_presents | humanize_number }} presents</em> was {{ previous_best | amDateFormat:'Do MMMM YYYY (a)' }}.
-      <span class="new-best" ng-show="new_best">That's a new best for you!</span>
+      <strong ng-show="new_best">That's a new best for you!</strong>
     </p>
     
   </div>
