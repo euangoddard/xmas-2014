@@ -8,18 +8,18 @@ layout: default
         <span class="presents" ng-bind="sleigh.presents | humanize_number"></span>
     </header>
 
-    <ng-include ng-hide="is_over" src="'partials/setup.html'"></ng-include>
-    <ng-include ng-hide="is_over" src="'partials/game.html'"></ng-include>
-    <ng-include ng-show="is_over" src="'partials/end.html'"></ng-include>
+    <ng-include ng-hide="is_over" src="'{{ site.baseurl }}partials/setup.html'"></ng-include>
+    <ng-include ng-hide="is_over" src="'{{ site.baseurl }}partials/game.html'"></ng-include>
+    <ng-include ng-show="is_over" src="'{{ site.baseurl }}partials/end.html'"></ng-include>
 
     {% include footer.html %}
 
-    <script src="js/lib/angular.min.js"></script>
-    <script src="js/lib/moment.min.js"></script>
-    <script src="js/lib/angular-moment.min.js"></script>
+    <script src="{{ site.baseurl }}js/lib/angular.min.js"></script>
+    <script src="{{ site.baseurl }}js/lib/moment.min.js"></script>
+    <script src="{{ site.baseurl }}js/lib/angular-moment.min.js"></script>
 
-    <script src="js/ticker.js"></script>
-    <script src="js/humanize.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{ site.baseurl }}js/ticker.js"></script>
+    <script src="{{ site.baseurl }}js/humanize.js"></script>
+    <script src="{{ site.baseurl }}js/storage.js"></script>
+    <script src="{{ site.baseurl }}js/main.js"></script>
 </body>

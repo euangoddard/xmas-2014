@@ -27,6 +27,7 @@ $gutter-width-large: $gutter-width * 2;
 
 body {
     padding-top: $gutter-width-large + $gutter-width;
+    padding-bottom: $gutter-width-large + $gutter-width;
 }
 
 $header-font-size-factor: 0.9;

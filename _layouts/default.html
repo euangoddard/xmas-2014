@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <title>Xmas 2014 card{% if page.title %} | {{ page.title }}{% endif %}</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <title>{{ site.title }}{% if page.title %} | {{ page.title }}{% endif %}</title>
+    <link rel="stylesheet" href="{{ site.baseurl }}css/main.css" />
     {% include ga.html %}
   </head>
   {{ content }}
