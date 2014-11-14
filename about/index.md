@@ -85,9 +85,78 @@ In a similar vein to *Cookie Clicker*, the main commodity that you produce is th
 
 There were many (crazy) other ideas suggested to me (and dreamt up late at night), but I decided to keep things relatively simple. The mechanism used to implement these items should lead to extensibility should any one care to do so in the future.
 
-The items which could be purchased, I encoded in the main (root) controller's scope (`GameCtrl`):
+### Items
+
+The items which could be purchased, I encoded in the main (root) controller's scope (`GameCtrl` in [main.js](https://github.com/euangoddard/xmas-2014/blob/master/js/main.js)):
 
 {% highlight javascript %}
-$scope.items = [];
+$scope.items = [
+    // items...
+];
 {% endhighlight %}
+
+The basis for each item was an simple object with the following properties:
+
+- `id` -- used for identification for styling
+- `label` -- a friendly label for the UI
+- `effect` -- a descriptive version of what effect purchasing the item has
+- `base_cost` -- the cost at the start of the game when the item had none of this item had been purchased (see below for details of price ramping)
+- `quantity` -- the current number of the item in play
+- `unit_effect` -- a value used in calculations around this item (this is quite variable and is closely coupled with the true effect)
+
+In addition to these basic properties, items can define one (or more) of the following methods:
+
+- `on_tick` -- called when ever the `Ticker` causes a tick
+- `on_buy` -- called when ever one of these items is purchased
+- `on_present_making` -- called when ever the user clicks on the *make present* button
+
+I experimented with various approaches to this, and this allowed for the greatest degree of flexibility to delegate the effect to the item itself. In the end, none of the items had dual effects (they merely implemented one of the above methods). Moreover, the similarities of the implementations could be factored out:
+
+#### `on_tick()`
+
+`on_tick()` was implemented by *the elf*, *the present duplicator*, *the reindeer trainer* and *the sleigh mechanic* and in the end I created a partial that was used for all but the elf:
+
+{% highlight javascript %}
+var sleigh_time_incrementer = function (item) {
+    return function () {
+        if (this.quantity) {
+            var multiplicand = 2 * (1 + Math.log(this.quantity));
+            var effect = 1 + (this.unit_effect * multiplicand);
+            $scope.sleigh[item] = cap_number($scope.sleigh[item] * effect);
+        }
+    };
+};
+{% endhighlight %}
+
+The need for this complexity was to ensure that things didn't get out of hand when a large number of items had been purchased, but also to ensure that there was a realistic way of achieving the relatively high number of target presents.
+
+For the elf, this was much more straight-forward (simply add the number of presents each elf can produce times by the total number of elves):
+
+{% highlight javascript %}
+{
+    id: 'elf',
+    base_cost: 15,
+    label: 'Elf',
+    effect: 'Make 100 presents per day',
+    quantity: 0,
+    unit_presents: 50,
+    on_tick: function () {
+        var new_presents = $scope.sleigh.presents + (this.quantity * this.unit_presents);
+        $scope.sleigh.presents = cap_number(new_presents);
+    }
+}
+{% endhighlight %}
+
+#### `on_buy()`
+
+`on_buy()` was implemented by *the reindeer* and *the sleigh upgrade*. I created a partial that was used by these since it simply incremented a count in the `sleigh` object which stored information about the game state:
+
+{% highlight javascript %}
+var sleigh_buy_incrementer = function (item) {
+    return function () {
+        $scope.sleigh[item] = cap_number($scope.sleigh[item] + this.unit_effect);
+    };
+};
+{% endhighlight %}
+
 
