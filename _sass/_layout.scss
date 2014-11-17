@@ -57,7 +57,7 @@ header {
         float: right;
     }
     .presents {
-        background-image: image-url("present-tight.svg");
+        background-image: image-url("present.svg");
         background-repeat: no-repeat;
         @include background-size($gutter-width-large $gutter-width-large);
         display: inline-block;

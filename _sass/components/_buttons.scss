@@ -34,7 +34,7 @@ $button-size-large: 2 * $button-size;
 
 
 .btn-present {
-    background-image: image-url("present-tight.svg");
+    background-image: image-url("present.svg");
     @include equal-dimensions($button-size-large);
     @include background-size(80%);
 }
