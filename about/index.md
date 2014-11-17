@@ -62,21 +62,21 @@ Ticker.tick(function () {
 
 The ticker tries to call the code about `1000 ms` apart, but since the `Ticker` service has to initiate a scope digest when it's time, the real interval will be at least this value depending on how much is done in the scope digest (and potentially other digests which might delay the `Ticker` initiates.
 
-Since the `Ticker` uses `requestAnimationFrame`, in some (mobile) browsers, the interval may be significantly longer than this period of the tab loses focus (or any other conditions are met which suppress the browser from firing the animation).
+Since the `Ticker` uses `requestAnimationFrame`, in some (mobile) browsers, the interval may be significantly longer than this period if the tab loses focus (or any other conditions are met which suppress the browser from firing the animation).
 
-Therefore, for both of the above reasons, any code in the controller cannot rely on a true time interval since this will not be representative of time in the game. Fortunately, for the most part it's pretty indistinguishable to simply increment the current "date" in the game by 12 hours every time there is a tick.
+Therefore, for both of the above reasons, any code in the controller cannot rely on a true time interval since this will not be representative of time in the game. Fortunately, for the most part it's pretty indistinguishable to simply increment the current "date" in the game by 12 game-hours every time there is a tick.
 
 ### Setting the goals
 
 The initial idea for the game was for Father Christmas (the player) to produce sufficient presents to give presents to all children in the world when Christmas comes around. [Cookie Clicker](http://orteil.dashnet.org/cookieclicker/) was a great source of inspiration for the repeated clicking ([thanks, Gil]({{ site.baseurl}}thanks/)) and led on to some further ideas about what other purchases could be made.
 
-The main purchasing of presents was achieved by the viewing calling a method on the controller:
+The main purchasing of presents was achieved by the view calling a method on the controller:
 
 {% highlight html %}
 <button type="button" ng-click="game_ctrl.make_presents()">
 {% endhighlight %}
 
-The method on the controller was initially quite straight-forward (it added one present to a variable in the `$scope`). Later on it evolved (see below).
+The method on the controller was initially quite straight-forward (it added one present to a variable in the `$scope`). Later on it evolved to allow other items to contribute at this point (e.g. the santa upgrade).
 
 In a similar vein to *Cookie Clicker*, the main commodity that you produce is the base currency for all other purchases. I didn't want to replicate Cookie Clicker (which would have been no mean feat!) and so ancillary goals were conceived. These were:
 
@@ -106,11 +106,11 @@ The basis for each item was an simple object with the following properties:
 
 In addition to these basic properties, items can define one (or more) of the following methods:
 
-- `on_tick` -- called when ever the `Ticker` causes a tick
+- `on_tick` -- called when ever the `Ticker` fires a tick
 - `on_buy` -- called when ever one of these items is purchased
 - `on_present_making` -- called when ever the user clicks on the *make present* button
 
-I experimented with various approaches to this, and this allowed for the greatest degree of flexibility to delegate the effect to the item itself. In the end, none of the items had dual effects (they merely implemented one of the above methods). Moreover, the similarities of the implementations could be factored out:
+I experimented with various approaches to this, and this allowed for the greatest degree of flexibility to delegate the effect to the item itself. In the end, none of the items had multiple effects (they merely implemented one of the above methods). Moreover, the similarities of the implementations could be factored out:
 
 #### `on_tick()`
 
@@ -159,4 +159,26 @@ var sleigh_buy_incrementer = function (item) {
 };
 {% endhighlight %}
 
+### Item cost
 
+In order to prevent too many items being purchased (especially those items which delivered immediate benefit to the number of presents available), I used the same algorithm for item pricing as *Cookie Clicker*:
+
+
+{% highlight javascript %}
+var get_item_cost = function (item) {
+    var item_cost = item.base_cost * Math.pow(1.15, item.quantity);
+    return parseInt(item_cost, 10);
+};
+{% endhighlight %}
+
+For the relative base-costs of the items themselves, I used a similar model to the increments that *Cookie Clickers* uses, but made the curve slightly less steep since not all item delivered benefit in terms of presents.
+
+## Tuning the results
+
+Once the initial work was complete, one of the hardest things was to tune the growth curve of presents (and other assets) so that the player could realistically achieve the target in the time available (about 12 minutes). I'm sure I could have been more scientific about this, but in the end I played with growth curves to ensure that some of the time-based benefits didn't grow too quickly or slowly.
+
+This gave rise to the slightly odd logarithmic relationship for the `sleigh_time_incrementer` to ensure that the player saw some early benefits but repeated purchases had less and less effect to stop things getting out of hand.
+
+## The rest
+
+Although this article is relatively detailed in some aspects it completely glosses over how I went about some bits and pieces. I hope that the [source code](https://github.com/euangoddard/xmas-2014/) is self-documenting for any one who cares to see what was going on.
